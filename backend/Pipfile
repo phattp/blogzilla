@@ -14,6 +14,7 @@ django-rest-knox = "*"
 psycopg2 = "*"
 psycopg2-binary = "*"
 pillow = "*"
+django-cors-headers = "*"
 
 [requires]
 python_version = "3.7"
