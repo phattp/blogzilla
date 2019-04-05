@@ -15,6 +15,7 @@ psycopg2 = "*"
 psycopg2-binary = "*"
 pillow = "*"
 django-cors-headers = "*"
+djangorestframework-simplejwt = "*"
 
 [requires]
 python_version = "3.7"
