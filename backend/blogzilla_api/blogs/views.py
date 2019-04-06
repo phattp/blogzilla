@@ -20,7 +20,10 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
 
 
 class BlogView(viewsets.ModelViewSet):
-    queryset = Blog.objects.all()
+    queryset = Blog.objects.order_by('-created_at')
     serializer_class = BlogSerializer
     lookup_field = 'slug'
     permission_classes = (IsOwnerOrReadOnly,)
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)

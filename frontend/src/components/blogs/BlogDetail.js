@@ -1,12 +1,50 @@
 import React, { Component } from "react";
 import TimeAgo from "react-timeago";
 import { connect } from "react-redux";
-import { getBlog } from "../actions";
+import PropTypes from "prop-types";
+import { getBlog, deleteBlog } from "../../actions/blogs";
 
 class BlogDetail extends Component {
+  static propTypes = {
+    user: PropTypes.object,
+    blog: PropTypes.object,
+    getBlog: PropTypes.func.isRequired,
+    deleteBlog: PropTypes.func.isRequired
+  };
+
   componentDidMount() {
-    this.props.getBlog(this.props.match.params.slug);
+    const { slug } = this.props.match.params;
+    this.props.getBlog(slug);
     window.scrollTo(0, 0);
+  }
+
+  checkOwner() {
+    const ownerButton = (
+      <div className="col-8">
+        <div className="d-flex justify-content-between">
+          <button className="btn btn-warning">Edit</button>
+          <button
+            onClick={this.props.deleteBlog.bind(this, this.props.blog.slug)}
+            className="btn btn-danger"
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+    );
+
+    const { blog } = this.props;
+    const { user } = this.props;
+
+    if (!user) {
+      return "";
+    }
+
+    if (blog.owner === user.username) {
+      return ownerButton;
+    }
+
+    return "";
   }
 
   renderBlog() {
@@ -25,6 +63,7 @@ class BlogDetail extends Component {
       <div className="row justify-content-md-center">
         <div className="col-8">
           <h3 className="mt-5 mb-4">{blog.title}</h3>
+          <p>{blog.owner ? `Written by: ${blog.owner}` : ""}</p>
           <img src={blog.image} alt={blog.title} width="500px" />
           <p className="mt-4">{blog.body}</p>
           <p className="mb-5">
@@ -33,6 +72,7 @@ class BlogDetail extends Component {
             </small>
           </p>
         </div>
+        {this.checkOwner()}
       </div>
     );
   }
@@ -43,10 +83,11 @@ class BlogDetail extends Component {
 }
 
 const mapStateToProps = state => ({
-  blog: state.blogs.blog
+  blog: state.blogs.blog,
+  user: state.auth.user
 });
 
 export default connect(
   mapStateToProps,
-  { getBlog }
+  { getBlog, deleteBlog }
 )(BlogDetail);
