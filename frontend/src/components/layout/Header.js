@@ -19,7 +19,10 @@ class Header extends Component {
           <strong>{user ? `Welcome ${user.username}` : ""}</strong>
         </span>
         <li className="nav-item mr-3">
-          <Link to="/createblog" className="nav-link">
+          <Link
+            to="/createblog"
+            className="nav-link btn btn-primary btn-sm text-light"
+          >
             Create Article
           </Link>
         </li>
@@ -50,7 +53,7 @@ class Header extends Component {
     );
 
     return (
-      <nav className="navbar navbar-expand-sm navbar-light bg-light">
+      <nav className="navbar sticky-top navbar-expand-sm navbar-light bg-light">
         <button
           className="navbar-toggler"
           type="button"

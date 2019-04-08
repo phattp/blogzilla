@@ -7,6 +7,7 @@ import { createBlog } from "../../actions/blogs";
 class CreateBlogForm extends Component {
   state = {
     title: "",
+    image: "",
     body: ""
   };
 
@@ -14,12 +15,17 @@ class CreateBlogForm extends Component {
     createBlog: PropTypes.func.isRequired
   };
 
+  handleChangeImage = e => this.setState({ image: e.target.files[0] });
+
   onChange = e => this.setState({ [e.target.name]: e.target.value });
 
   onSubmit = e => {
     e.preventDefault();
-    const { title, body } = this.state;
-    const blog = { title, body };
+    const { title, image, body } = this.state;
+    const blog = new FormData();
+    blog.append("title", title);
+    blog.append("image", image, image.name);
+    blog.append("body", body);
     this.props.createBlog(blog);
     this.props.history.push("/");
   };
@@ -27,7 +33,7 @@ class CreateBlogForm extends Component {
   render() {
     const { title, body } = this.state;
     return (
-      <div className="card card-body mt-4 mb-4">
+      <div className="card card-body mt-5 mb-5">
         <h2>Create Article</h2>
         <form onSubmit={this.onSubmit}>
           <div className="form-group">
@@ -38,6 +44,15 @@ class CreateBlogForm extends Component {
               name="title"
               onChange={this.onChange}
               value={title}
+            />
+          </div>
+          <div className="form-group">
+            <label>Image</label>
+            <input
+              className="form-control-file"
+              type="file"
+              name="image"
+              onChange={this.handleChangeImage}
             />
           </div>
           <div className="form-group">

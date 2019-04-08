@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { withRouter } from "react-router-dom";
 import TimeAgo from "react-timeago";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
@@ -18,15 +19,18 @@ class BlogDetail extends Component {
     window.scrollTo(0, 0);
   }
 
+  onDelete = e => {
+    e.preventDefault();
+    this.props.deleteBlog(this.props.blog.slug);
+    this.props.history.push("/");
+  };
+
   checkOwner() {
     const ownerButton = (
       <div className="col-8">
-        <div className="d-flex justify-content-between">
+        <div className="d-flex justify-content-between mb-5">
           <button className="btn btn-warning">Edit</button>
-          <button
-            onClick={this.props.deleteBlog.bind(this, this.props.blog.slug)}
-            className="btn btn-danger"
-          >
+          <button onClick={this.onDelete} className="btn btn-danger">
             Delete
           </button>
         </div>
@@ -66,7 +70,7 @@ class BlogDetail extends Component {
           <p>{blog.owner ? `Written by: ${blog.owner}` : ""}</p>
           <img src={blog.image} alt={blog.title} width="500px" />
           <p className="mt-4">{blog.body}</p>
-          <p className="mb-5">
+          <p>
             <small className="text-muted">
               <TimeAgo date={blog.updated_at} />
             </small>
@@ -90,4 +94,4 @@ const mapStateToProps = state => ({
 export default connect(
   mapStateToProps,
   { getBlog, deleteBlog }
-)(BlogDetail);
+)(withRouter(BlogDetail));
